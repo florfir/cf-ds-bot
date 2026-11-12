@@ -38,6 +38,11 @@ app.post('/interactions', async (c) => {
           type: 4,
           data: { content: 'nya~' },
         });
+      case 'дехаб':
+        return c.json({
+          type: 4,
+          data: { content: Math.random() > 0.5 ? 'Завтра' : 'Сегодня!!!' },
+        });
     }
   }
 
