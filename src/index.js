@@ -7,6 +7,9 @@ app.get('/', (c) => c.json({ status: 'ok' }));
 
 app.get('/204', () => new Response(null, { status: 204 }));
 
+app.get('/robots.txt', (c) => c.text(`User-agent: *
+Disallow: /`));
+
 app.post('/interactions', async (c) => {
   const signature = c.req.header('X-Signature-Ed25519');
   const timestamp = c.req.header('X-Signature-Timestamp');
