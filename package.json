@@ -22,5 +22,9 @@
   "homepage": "https://github.com/florfir/cf-ds-bot#readme",
   "devDependencies": {
     "wrangler": "^4.161.0"
+  },
+  "dependencies": {
+    "discord-interactions": "^4.4.0",
+    "hono": "^4.13.18"
   }
 }

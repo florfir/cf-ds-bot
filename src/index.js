@@ -1,10 +1,10 @@
-export default {
-  async fetch(request, env, ctx) {
-    const data = {
-      status: "ok",
-      code: 0,
-    };
+import { verifyKey } from 'discord-interactions';
+import { Hono } from 'hono';
 
-    return Response.json(data);
-  },
-};
+const app = new Hono();
+
+app.get('/204', (c)=>{
+  return new Response(null, { status: 204 });
+});
+
+export default app;
