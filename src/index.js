@@ -12,7 +12,7 @@ app.post('/interactions', async (c) => {
   const timestamp = c.req.header('X-Signature-Timestamp');
   const body = await c.req.text();
 
-  console.log('key:', c.env.DISCORD_PUBLIC_KEY ? 'set' : 'MISSING', 'sig:', !!signature);
+  // console.log('key:', c.env.DISCORD_PUBLIC_KEY ? 'set' : 'MISSING', 'sig:', !!signature);
 
   let valid = false;
   try {
@@ -41,7 +41,17 @@ app.post('/interactions', async (c) => {
       case 'дехаб':
         return c.json({
           type: 4,
-          data: { content: Math.random() > 0.5 ? 'Завтра' : 'Сегодня!!!' },
+          data: { content: Math.random() > 0.5 ? 'Завтра' : 'Сегодня!' },
+        });
+      case 'выбери':
+        const arr = interaction.data.options
+        const ch = (
+          arr[Math.floor(Math.random() * arr.length)]?.value ?? ''
+        ).slice(0, 20).replace(/@/g, '\\@');
+        
+        return c.json({
+          type: 4,
+          data: { content: `Выбираю...\n${ch}` },
         });
     }
   }

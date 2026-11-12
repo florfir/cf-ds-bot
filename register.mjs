@@ -14,7 +14,32 @@ const res = await fetch(url, {
   },
   body: JSON.stringify([
     { name: 'nya', description: 'nya~', type: 1 },
-    { name: 'дехаб', description: 'когда дехаб', type: 1}
+    { name: 'дехаб', description: 'когда дехаб', type: 1},
+    {
+      name: 'выбери',
+      description: 'не придумал',
+      type: 1,
+      options: [
+        {
+          name: 'ch1',
+          description: 'ага',
+          type: 3, // str
+          required: true
+        },
+        {
+          name: 'ch2',
+          description: 'ага',
+          type: 3, // str
+          required: true
+        },
+        {
+          name: 'ch3',
+          description: 'ага',
+          type: 3, // str
+          required: false
+        }
+      ]
+    }
   ]),
 });
 
