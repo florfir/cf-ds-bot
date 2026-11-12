@@ -3,48 +3,40 @@ import { Hono } from 'hono';
 
 const app = new Hono();
 
-app.get('/', (c)=>{
-  return c.json({
-    status: 'ok'
-  })
-});
+app.get('/', (c) => c.json({ status: 'ok' }));
 
-app.get('/204', (c)=>{
-  return new Response(null, { status: 204 });
-});
+app.get('/204', () => new Response(null, { status: 204 }));
 
 app.post('/interactions', async (c) => {
   const signature = c.req.header('X-Signature-Ed25519');
   const timestamp = c.req.header('X-Signature-Timestamp');
   const body = await c.req.text();
 
-  const valid = await verifyKey(
-    body,
-    signature,
-    timestamp,
-    c.env.DISCORD_PUBLIC_KEY
-  );
+  console.log('key:', c.env.DISCORD_PUBLIC_KEY ? 'set' : 'MISSING', 'sig:', !!signature);
+
+  let valid = false;
+  try {
+    valid = await verifyKey(body, signature, timestamp, c.env.DISCORD_PUBLIC_KEY);
+  } catch (e) {
+    console.log('verifyKey error:', e.message);
+  }
 
   if (!valid) {
-    return c.json({message: "Bad sign"}, 401);
+    return c.text('Bad request signature', 401);
   }
 
   const interaction = JSON.parse(body);
 
-  // ping
   if (interaction.type === 1) {
     return c.json({ type: 1 });
   }
 
-  // commands
   if (interaction.type === 2) {
     switch (interaction.data.name) {
       case 'nya':
         return c.json({
           type: 4,
-          data: {
-            content: 'nya~',
-          },
+          data: { content: 'nya~' },
         });
     }
   }
