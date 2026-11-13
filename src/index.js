@@ -65,7 +65,7 @@ app.post('/interactions', async (c) => {
         if (userId != c.env.OWNER_ID) {
           return baseMessage(c, "Не дорос");
         }
-        const ip = interaction.data.options[0];
+        const ip = interaction.data.options[0].value;
         const response = await fetch(`http://ip-api.com/json/${ip}?fields=17023488`);
 
         if(!response.ok) {
