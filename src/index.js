@@ -1,5 +1,6 @@
 import { verifyKey } from 'discord-interactions';
 import { Hono } from 'hono';
+import { baseMessage } from './response.js'
 
 const app = new Hono();
 
@@ -51,15 +52,40 @@ app.post('/interactions', async (c) => {
         const ch = (
           arr[Math.floor(Math.random() * arr.length)]?.value ?? ''
         ).slice(0, 20).replace(/@/g, '\\@');
-        
+
         return c.json({
           type: 4,
           data: { content: `Выбираю...\n${ch}` },
         });
+      case 'ip':
+        if (interaction.user.id != c.env.OWNER_ID) {
+          return baseMessage(c, "Не дорос");
+        }
+        const ip = interaction.data.options[0];
+        const response = await fetch(`http://ip-api.com/json/${ip}?fields=17023488`);
+
+        if(!response.ok) {
+          return baseMessage(c, "У респонса статус не ок");
+        }
+
+        const text = await response.text();
+
+        if(!text) {
+          return baseMessage(c, "Пустое тело");
+        }
+
+        /*let parsed;
+
+        try {
+          parsed = JSON.parse(text)
+        } catch {
+          return baseMessage(c, "Жсон не парсится")
+        }*/
+       return baseMessage(c, `Ну значится, смотри\n\n\`\`\`json\n${text}\`\`\``);
     }
   }
 
-  return new Response(null, { status: 204 });
+  return new Response(null, { status: 404 });
 });
 
 export default app;
