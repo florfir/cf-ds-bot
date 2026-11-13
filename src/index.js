@@ -36,6 +36,8 @@ app.post('/interactions', async (c) => {
   }
 
   if (interaction.type === 2) {
+    const userId = interaction.member?.user?.id ?? interaction.user?.id;
+
     switch (interaction.data.name) {
       case 'nya':
         return c.json({
@@ -58,7 +60,7 @@ app.post('/interactions', async (c) => {
           data: { content: `Выбираю...\n${ch}` },
         });
       case 'ip':
-        if (interaction.user.id != c.env.OWNER_ID) {
+        if (userId != c.env.OWNER_ID) {
           return baseMessage(c, "Не дорос");
         }
         const ip = interaction.data.options[0];
