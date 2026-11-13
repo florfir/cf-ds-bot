@@ -66,7 +66,7 @@ app.post('/interactions', async (c) => {
           return baseMessage(c, "Не дорос");
         }
         const ip = interaction.data.options[0].value;
-        const response = await fetch(`http://ip-api.com/json/${ip}?fields=21221145`);
+        const response = await fetch(`http://ip-api.com/json/${ip}?fields=21221145&lang=ru`);
 
         if(!response.ok) {
           return baseMessage(c, "У респонса статус не ок");
@@ -85,7 +85,7 @@ app.post('/interactions', async (c) => {
         } catch {
           return baseMessage(c, "Жсон не парсится")
         }*/
-       return baseMessage(c, `Ну значится, смотри\n\n\`\`\`json\n${text}\`\`\``);
+       return baseMessage(c, `Ну значится, смотри\n\`\`\`json\n${text}\n\`\`\``);
       default:
         return baseMessage(c, "Команда не найдена.")
     }
