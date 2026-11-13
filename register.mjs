@@ -39,6 +39,19 @@ const res = await fetch(url, {
           required: false
         }
       ]
+    },
+    {
+      name: 'ip',
+      description: 'ачё',
+      type: 1,
+      options: [
+        {
+          name: 'ip',
+          description: 'думай',
+          type: 3,
+          required: true
+        }
+      ]
     }
   ]),
 });
