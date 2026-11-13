@@ -38,6 +38,8 @@ app.post('/interactions', async (c) => {
   if (interaction.type === 2) {
     const userId = interaction.member?.user?.id ?? interaction.user?.id;
 
+    console.log(`Словил новый интеракшен ${interaction.data.name}`)
+
     switch (interaction.data.name) {
       case 'nya':
         return c.json({
@@ -84,6 +86,8 @@ app.post('/interactions', async (c) => {
           return baseMessage(c, "Жсон не парсится")
         }*/
        return baseMessage(c, `Ну значится, смотри\n\n\`\`\`json\n${text}\`\`\``);
+      default:
+        return baseMessage(c, "Команда не найдена.")
     }
   }
 
