@@ -1,5 +1,5 @@
 export function baseMessage(c, str) {
-    c.json({
+    return c.json({
         type: 4,
         data: { content: str },
     });
