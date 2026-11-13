@@ -66,7 +66,7 @@ app.post('/interactions', async (c) => {
           return baseMessage(c, "Не дорос");
         }
         const ip = interaction.data.options[0].value;
-        const response = await fetch(`http://ip-api.com/json/${ip}?fields=17023488`);
+        const response = await fetch(`http://ip-api.com/json/${ip}?fields=30666751`);
 
         if(!response.ok) {
           return baseMessage(c, "У респонса статус не ок");
