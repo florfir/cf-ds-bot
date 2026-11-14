@@ -52,6 +52,19 @@ const res = await fetch(url, {
           required: true
         }
       ]
+    },
+        {
+      name: 'browser',
+      description: 'скриншот страницы',
+      type: 1,
+      options: [
+        {
+          name: 'url',
+          description: 'ссылка',
+          type: 3,
+          required: true
+        }
+      ]
     }
   ]),
 });
