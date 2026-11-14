@@ -4,6 +4,15 @@ import { baseMessage, hiddenMessage } from './response.js'
 
 const app = new Hono();
 
+app.notFound((c)=>{
+  return c.json({ status: 'not ok', message: 'Not found' }, 404)
+});
+
+app.onError((err, c) => {
+  console.error(err);
+  return c.json({ status: 'not ok', message: 'Error' }, 500);
+});
+
 app.get('/', (c) => c.json({ status: 'ok' }));
 
 app.get('/204', () => new Response(null, { status: 204 }));
