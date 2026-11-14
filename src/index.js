@@ -1,6 +1,6 @@
 import { verifyKey } from 'discord-interactions';
 import { Hono } from 'hono';
-import { baseMessage } from './response.js'
+import { baseMessage, hiddenMessage } from './response.js'
 
 const app = new Hono();
 
@@ -61,6 +61,46 @@ app.post('/interactions', async (c) => {
           type: 4,
           data: { content: `Выбираю...\n${ch}` },
         });
+      case 'browser':
+        if (userId != c.env.OWNER_ID) {
+          return baseMessage(c, "Не дорос");
+        }
+
+        const target = interaction.data.options?.[0]?.value;
+        try {
+          new URL(target);
+        } catch {
+          return hiddenMessage(c, "Это не ссылка");
+        }
+
+        const hook = `https://discord.com/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
+
+        c.executionCtx.waitUntil((async () => {
+          try {
+            const res = await c.env.BROWSER.quickAction('screenshot', { url: target });
+            if (!res.ok) throw new Error(`browser run вернул ${res.status}`);
+
+            const form = new FormData();
+            form.append('payload_json', JSON.stringify({
+              attachments: [{ id: 0, filename: 'screenshot.png' }],
+            }));
+            form.append(
+              'files[0]',
+              new Blob([await res.arrayBuffer()], { type: 'image/png' }),
+              'screenshot.png',
+            );
+
+            await fetch(hook, { method: 'PATCH', body: form });
+          } catch (e) {
+            await fetch(hook, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ content: `Упало: ${e.message}` }),
+            });
+          }
+        })());
+
+        return c.json({ type: 5 });
       case 'ip':
         if (userId != c.env.OWNER_ID) {
           return baseMessage(c, "Не дорос");
@@ -68,13 +108,13 @@ app.post('/interactions', async (c) => {
         const ip = interaction.data.options[0].value;
         const response = await fetch(`http://ip-api.com/json/${ip}?fields=21221145&lang=ru`);
 
-        if(!response.ok) {
+        if (!response.ok) {
           return baseMessage(c, "У респонса статус не ок");
         }
 
         const text = await response.text();
 
-        if(!text) {
+        if (!text) {
           return baseMessage(c, "Пустое тело");
         }
 
@@ -85,7 +125,7 @@ app.post('/interactions', async (c) => {
         } catch {
           return baseMessage(c, "Жсон не парсится")
         }*/
-       return baseMessage(c, `Ну значится, смотри\n\`\`\`json\n${text}\n\`\`\``);
+        return baseMessage(c, `Ну значится, смотри\n\`\`\`json\n${text}\n\`\`\``);
       default:
         return baseMessage(c, "Команда не найдена.")
     }

@@ -7,3 +7,6 @@ workers_dev = false
 [observability.logs]
 enabled = true
 invocation_logs = true
+
+[browser]
+binding = "BROWSER"
